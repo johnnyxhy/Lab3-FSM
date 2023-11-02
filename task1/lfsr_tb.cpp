@@ -37,8 +37,9 @@ int main(int argc, char **argv, char **env){
     top->rst = 0;
    
    // For Plotting
-    vbdHex(1, top->data_out & 0xF);
-    vbdBar(top->data_out & 0xFF);
+    vbdHex(2, (top->data_out >> 4) &  0xF);
+    vbdHex(1, top->data_out &  0xF);
+    vbdBar(top->data_out);
 
     //set one-shot mode
     vbdSetMode(1);
