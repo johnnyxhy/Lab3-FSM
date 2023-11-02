@@ -1,7 +1,6 @@
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #include "Vclktick.h"
-#include "Vf1_fsm.h"
 
 #include "vbuddy.cpp"     // include vbuddy code
 #define MAX_SIM_CYC 100000
@@ -29,9 +28,9 @@ int main(int argc, char **argv, char **env) {
   top->clk = 1;
   top->rst = 0;
   top->en = 0;
-  top->N = 50;
+  top->N = vbdValue();
 
-  //N for 1 sec 23
+  //N for 1 sec 17
   
   // run simulation for MAX_SIM_CYC clock cycles
   for (simcyc=0; simcyc<MAX_SIM_CYC; simcyc++) {
@@ -43,13 +42,17 @@ int main(int argc, char **argv, char **env) {
     }
 
     // Display toggle neopixel
-    vbdBar(top->data_out);
+    if (top->tick) {
+      vbdBar(lights);
+      lights = lights ^ 0xFF;
+    }
     // set up input signals of testbench
     top->rst = (simcyc < 2);    // assert reset for 1st cycle
     top->en = (simcyc > 2);
+    top->N = vbdValue();
     vbdCycle(simcyc);
 
-    if (Verilated::gotFinish() || (vbdGetkey()=='q'))  exit(0);
+    if (Verilated::gotFinish())  exit(0);
   }
 
   vbdClose();     // ++++

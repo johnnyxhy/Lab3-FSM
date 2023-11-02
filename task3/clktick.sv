@@ -6,7 +6,8 @@ module clktick #(
   input  logic             rst,      // reset
   input  logic             en,       // enable signal
   input  logic [WIDTH-1:0] N,     	 // clock divided by N+1
-  output logic  		       tick      // tick output
+  output logic  		       tick,     // tick output
+  output logic [7:0]       data_out
 );
 
 logic [WIDTH-1:0] count;
@@ -26,4 +27,12 @@ always_ff @ (posedge clk)
 		    count <= count - 1'b1;
 	        end
         end
+      
+f1_fsm f1_fsm(
+  .clk(clk),
+  .en(tick),
+  .rst(rst),
+  .data_out(data_out)
+);
+
 endmodule
